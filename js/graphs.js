@@ -1,7 +1,7 @@
 function draw() {
 
-  var h = 400,
-    w = 400,
+  var h = 800,
+    w = 800,
     r = Math.min(w, h) / 1.9,
     s = .09;
 
@@ -20,22 +20,55 @@ function draw() {
     .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
 
 
-
-  d3.json("manual-data.json", function(e, d){
+  d3.json("manual-data.json", function(error, data){
     
+    function fields () {
+
+      var keys = [];
+
+      var getkey = function() {      
+        for (var key in data.today.one){
+          keys.push(key);
+        }
+        return keys;
+      }();
+
+      var d = data.today.one;
+
+      var name = d.name,
+        watchers = d.watchers,
+        stargazers = d.stargazers,
+        forks = d.forks,
+        pulls = d.pulls,
+        contributors = d.contributors;
+
+      return [
+        {value: watchers, index: .5, text: keys[0]},
+        {value: stargazers, index: .4, text: keys[1]},
+        {value: forks, index: .3, text: keys[2]},
+        {value: pulls, index: .2, text: keys[3]},
+        {value: contributors, index: .1, text: keys[4]}
+      ]
+
+    };
+
+
+
 
     var g = svg.selectAll("g")
-        .data(d)
+        .data(fields)
       .enter().append("g");
 
     g.append("path")
+            // .style("fill", "#52ff4c")
         .style("fill", function(d, i) { return fill[i]; })
         .attr("d", arc);
 
     g.append("text")
         .attr("text-anchor", "middle")
         .attr("dy", "1em")
-        .text(function(d) { return d.text; });
+        .text(function(d,i) { return d.text; });
+
 
 
   })
