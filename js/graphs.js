@@ -1,15 +1,15 @@
 function draw() {
 
-  var h = 800,
-    w = 800,
+  var h = 400,
+    w = 400,
     r = Math.min(w, h) / 1.9,
     s = .09;
 
-  var fill = ["#047f00", "#52ff4c", "#08ff00", "#2f912c", "#07cc00"]; 
+  var fill = ["#047f00", "#52ff4c", "#08ff00", "#2f912c", "#07cc00"];
 
   var arc = d3.svg.arc()
     .startAngle(0)
-    .endAngle(function(d) { return d.value * 2 * Math.PI; })
+    .endAngle(function(d) { return (d.value/500) * 2 * Math.PI; })
     .innerRadius(function(d) { return d.index * r; })
     .outerRadius(function(d) { return (d.index + s) * r; });
 
@@ -44,7 +44,7 @@ function draw() {
 
       return [
         {value: watchers, index: .5, text: keys[0]},
-        {value: stargazers, index: .4, text: keys[1]},
+        // {value: stargazers, index: .4, text: keys[1]},
         {value: forks, index: .3, text: keys[2]},
         {value: pulls, index: .2, text: keys[3]},
         {value: contributors, index: .1, text: keys[4]}
