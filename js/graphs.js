@@ -44,16 +44,12 @@ function drawSpiral() {
 
       return [
         {value: watchers, index: .4, text: keys[0]},
-        // {value: stargazers, index: .4, text: keys[1]},
         {value: forks, index: .3, text: keys[2]},
         {value: pulls, index: .2, text: keys[3]},
         {value: contributors, index: .1, text: keys[4]}
       ]
 
     };
-
-
-
 
     var g = svg.selectAll("g")
         .data(fields)
@@ -62,11 +58,6 @@ function drawSpiral() {
     g.append("path")
         .style("fill", function(d, i) { return fill[i]; })
         .attr("d", arc);
-
-    g.append("text")
-        .attr("text-anchor", "middle")
-        .attr("dy", "1em")
-        .text(function(d,i) { return d.text; });
   })
 
 }
@@ -98,10 +89,11 @@ function drawColumn() {
 
   d3.json("manual-data.json", function(error, data){
 
-    var dataset = [data.today.one[1]];
+    var dataset = [data.today.one.stargazers, data.today.two.stargazers, data.today.three.stargazers, data.today.four.stargazers, data.today.five.stargazers];
+    var maxY = d3.max(dataset)
 
-    x.domain(dataset.map(function(d) { return d; }));
-    y.domain([0, d3.max(data, function(d){return d.today.one.stargazers})]);
+    x.domain(dataset.map(function(d) { return data.today.one.stargazers; }));
+    y.domain([0, d3.max(dataset)]);
 
     svg.append("g")
       .attr("class", "x axis")
@@ -116,12 +108,12 @@ function drawColumn() {
         .data(dataset)
       .enter().append("rect")
         .attr("class", "bar")
-        .attr("x", function(d) { return x(d); })
+        .attr("x", function(d) { return x(data.today.one.stargazers); })
         .attr("width", x.rangeBand())
-        .attr("y", 0)
-        .attr("height", function(d) {return y(dataset); });
+        .attr("y", function(d) {return y(data.today.one.stargazers); })
+        .attr("height", function(d) {return height - y(data.today.one.stargazers);  });
 
-        console.log(y(dataset));
+        console.log(height - y(data.today.one.stargazers));
 
   })
 
