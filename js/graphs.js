@@ -98,7 +98,9 @@ function drawColumn() {
 
   d3.json("manual-data.json", function(error, data){
 
-    x.domain(data.today.one.stargazers);
+    var dataset = [data.today.one[1]];
+
+    x.domain(dataset.map(function(d) { return d; }));
     y.domain([0, d3.max(data, function(d){return d.today.one.stargazers})]);
 
     svg.append("g")
@@ -110,13 +112,16 @@ function drawColumn() {
       .attr("class", "y axis")
       .call(yAxis);
 
-    svg.selectAll()
-        .data(data)
+    svg.selectAll("rect")
+        .data(dataset)
       .enter().append("rect")
-        .attr("x", "50px")
-        .attr("width", "20px")
-        .attr("y", function(d) { return y(data.today.one.stargazers); })
-        .attr("height", function(d) { return height - y(data.today.one.stargazers); });
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d); })
+        .attr("width", x.rangeBand())
+        .attr("y", 0)
+        .attr("height", function(d) {return y(dataset); });
+
+        console.log(y(dataset));
 
   })
 
