@@ -7,12 +7,6 @@ function drawSpiral() {
 
   var fill = ["#047f00", "#52ff4c", "#08ff00", "#2f912c", "#07cc00"];
 
-  var arc = d3.svg.arc()
-    .startAngle(0)
-    .endAngle(function(d) { return (d.value/500) * 2 * Math.PI; })
-    .innerRadius(function(d) { return d.index * r; })
-    .outerRadius(function(d) { return (d.index + s) * r; });
-
   var svg = d3.select(".one").append("svg")
     .attr("width", width)
     .attr("height", height)
@@ -33,7 +27,7 @@ function drawSpiral() {
         return keys;
       }();
 
-      var d = data.today.one;
+      var d = data.today.four;
 
       var name = d.name,
         watchers = d.watchers,
@@ -51,6 +45,29 @@ function drawSpiral() {
 
     };
 
+    function maxValue () {
+
+      //create values array to get max, then add mac to divide arc
+
+      var fields = fields();
+      var values = [];
+
+      for (var value in fields) {
+        values.push(value);
+      }
+
+      return d3.max(values);
+    }
+
+    console.log(maxValue());
+
+
+    var arc = d3.svg.arc()
+      .startAngle(0)
+      .endAngle(function(d) { return (d.value/maxValue) * 2 * Math.PI; })
+      .innerRadius(function(d) { return d.index * r; })
+      .outerRadius(function(d) { return (d.index + s) * r; });
+
     var g = svg.selectAll("g")
         .data(fields)
       .enter().append("g");
@@ -65,7 +82,7 @@ function drawSpiral() {
 function drawColumn() {
   var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 400 - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
+    height = 100 - margin.top - margin.bottom;
 
   var x = d3.scale.ordinal()
       .rangeRoundBands([0, width], .1, 1);
@@ -112,8 +129,6 @@ function drawColumn() {
         .attr("width", x.rangeBand())
         .attr("y", function(d) {return y(data.today.one.stargazers); })
         .attr("height", function(d) {return height - y(data.today.one.stargazers);  });
-
-        console.log(height - y(data.today.one.stargazers));
 
   })
 
