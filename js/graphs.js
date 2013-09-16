@@ -49,22 +49,17 @@ function drawSpiral() {
 
     function maxValue () {
 
-      //create values array to get max, then add mac to divide arc
+      //get max to divide arc
 
       var values = [];
 
       function getValues (element, index, array) {
         values.push(element.value);
-        console.log(index + " :" + element.value);
       } 
 
       fields.forEach(getValues);
-
-      console.log(values);
       return d3.max(values);
     }
-
-    console.log();
 
     maxValue = maxValue();
 
@@ -99,7 +94,7 @@ function drawColumn() {
 
   var xAxis = d3.svg.axis()
       .scale(x)
-      .orient("bottom");
+      .orient("top");
 
   var yAxis = d3.svg.axis()
       .scale(y)
@@ -118,6 +113,7 @@ function drawColumn() {
 
     x.domain(dataset.map(function(d) { return data.today.one.stargazers; }));
     y.domain([0, d3.max(dataset)]);
+    yAxis.tickValues([0, data.today.one.stargazers, d3.max(dataset)]);
 
     svg.append("g")
       .attr("class", "x axis")
@@ -138,9 +134,6 @@ function drawColumn() {
         .attr("height", function(d) {return height - y(data.today.one.stargazers);  });
 
   })
-
-
-
 }
 
 $(document).ready(
