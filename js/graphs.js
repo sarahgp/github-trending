@@ -45,26 +45,33 @@ function drawSpiral() {
 
     };
 
+    var fields = fields();
+
     function maxValue () {
 
       //create values array to get max, then add mac to divide arc
 
-      var fields = fields();
       var values = [];
 
-      for (var value in fields) {
-        values.push(value);
-      }
+      function getValues (element, index, array) {
+        values.push(element.value);
+        console.log(index + " :" + element.value);
+      } 
 
+      fields.forEach(getValues);
+
+      console.log(values);
       return d3.max(values);
     }
 
-    console.log(maxValue());
+    console.log();
+
+    maxValue = maxValue();
 
 
     var arc = d3.svg.arc()
       .startAngle(0)
-      .endAngle(function(d) { return (d.value/maxValue) * 2 * Math.PI; })
+      .endAngle(function(d) { return (d.value/(maxValue + 100)) * 2 * Math.PI; })
       .innerRadius(function(d) { return d.index * r; })
       .outerRadius(function(d) { return (d.index + s) * r; });
 
