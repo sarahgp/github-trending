@@ -113,7 +113,7 @@ function drawColumn() {
 
     x.domain(dataset.map(function(d) { return data.today.one.stargazers; }));
     y.domain([0, d3.max(dataset)]);
-    yAxis.tickValues([0, data.today.one.stargazers, d3.max(dataset)]);
+    yAxis.tickValues([data.today.one.stargazers, d3.max(dataset)]);
 
     svg.append("g")
       .attr("class", "x axis")
