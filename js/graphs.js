@@ -1,16 +1,17 @@
+
 function drawSpiral() {
 
   var height = 400,
-    width = 400,
-    r = Math.min(width, height) / 1.9,
-    s = .09;
+      width = 400,
+      r = Math.min(width, height) / 1.9,
+      s = .09;
 
   var fill = ["#047f00", "#52ff4c", "#08ff00", "#2f912c", "#07cc00"];
 
   var svg = d3.select(".one").append("svg")
     .attr("width", width)
     .attr("height", height)
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 
@@ -24,6 +25,7 @@ function drawSpiral() {
         for (var key in data.today.one){
           keys.push(key);
         }
+
         return keys;
       }();
 
@@ -82,9 +84,9 @@ function drawSpiral() {
 }
 
 function drawColumn() {
-  var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 400 - margin.left - margin.right,
-    height = 100 - margin.top - margin.bottom;
+  var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+      width = 400 - margin.left - margin.right,
+      height = 100 - margin.top - margin.bottom;
 
   var x = d3.scale.ordinal()
       .rangeRoundBands([0, width], .1, 1);
@@ -103,37 +105,40 @@ function drawColumn() {
   var svg = d3.select(".one-below").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   d3.json("manual-data.json", function(error, data){
+    var dataset = Object.keys(data.today).map(function(key){ return data.today[key].stargazers; });
+    var maxY = d3.max(dataset);
 
-    var dataset = [data.today.one.stargazers, data.today.two.stargazers, data.today.three.stargazers, data.today.four.stargazers, data.today.five.stargazers];
-    var maxY = d3.max(dataset)
+    Object.keys(data.today).forEach(function(key, i){
+      var v = data.today[key];
 
-    x.domain(dataset.map(function(d) { return data.today.one.stargazers; }));
-    y.domain([0, d3.max(dataset)]);
-    yAxis.tickValues([data.today.one.stargazers, d3.max(dataset)]);
+      x.domain(dataset.map(function(d) { return v.stargazers; }));
+      y.domain([0, d3.max(dataset)]);
+      yAxis.tickValues([v.stargazers, d3.max(dataset)]);
 
-    svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+      svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
-    svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis);
+      svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
 
-    svg.selectAll("rect")
-        .data(dataset)
-      .enter().append("rect")
-        .attr("class", "bar")
-        .attr("x", function(d) { return x(data.today.one.stargazers); })
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) {return y(data.today.one.stargazers); })
-        .attr("height", function(d) {return height - y(data.today.one.stargazers);  });
+      svg.selectAll("rect")
+          .data(dataset)
+          .enter().append("rect")
+          .attr("class", "bar")
+          .attr("x", function(d) { return x(v.stargazers); })
+          .attr("width", x.rangeBand())
+          .attr("y", function(d) {return y(v.stargazers); })
+          .attr("height", function(d) {return height - y(v.stargazers);  });
 
-  })
+    })
+  });
 }
 
 $(document).ready(
@@ -141,5 +146,4 @@ $(document).ready(
     drawSpiral()
     drawColumn();
   }
-
 );
