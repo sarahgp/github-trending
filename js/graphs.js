@@ -84,36 +84,39 @@ function drawSpiral() {
 }
 
 function drawColumn() {
-  var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-      width = 400 - margin.left - margin.right,
-      height = 100 - margin.top - margin.bottom;
 
-  var x = d3.scale.ordinal()
-      .rangeRoundBands([0, width], .1, 1);
-
-  var y = d3.scale.linear()
-      .range([height, 0]);
-
-  var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("top");
-
-  var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left");
-
-  var svg = d3.select(".one-below").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   d3.json("manual-data.json", function(error, data){
+
     var dataset = Object.keys(data.today).map(function(key){ return data.today[key].stargazers; });
     var maxY = d3.max(dataset);
 
     Object.keys(data.today).forEach(function(key, i){
       var v = data.today[key];
+
+    var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+        width = 400 - margin.left - margin.right,
+        height = 100 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1, 1);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("top");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+    var svg = d3.select(".one-below").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       x.domain(dataset.map(function(d) { return v.stargazers; }));
       y.domain([0, d3.max(dataset)]);
